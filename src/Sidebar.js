@@ -1,4 +1,5 @@
 import React from 'react'
+import SidebarChat from './SidebarChat'
 import {Avatar, IconButton}  from "@material-ui/core";
 import './Sidebar.css'
 
@@ -36,7 +37,10 @@ function Sidebar() {
                 
             </div>
             <div className='sidebar__chats'>
-
+                <SidebarChat/>
+                <SidebarChat/>
+                <SidebarChat/>
+                <SidebarChat/>
             </div>
         </div>
     )
