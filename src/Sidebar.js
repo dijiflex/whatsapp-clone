@@ -7,7 +7,7 @@ import db from './firebase'
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import ChatIcon from '@material-ui/icons/Chat';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import  {SearchOutlined } from '@material-ui/icons'
+import  {SearchOutlined, Unsubscribe } from '@material-ui/icons'
 function Sidebar() {
     const [rooms, setRooms] = useState([]);
     useEffect(() => {
@@ -15,7 +15,11 @@ function Sidebar() {
             id: doc.id,
             data: doc.data()
 
-        })))))
+        })))));
+
+        return () =>{
+            Unsubscribe();
+        }
     }, [])
     return (
         <div className='sidebar'>
