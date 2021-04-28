@@ -14,7 +14,7 @@ function Chat() {
     useEffect(() => {
        setSeed(Math.floor(Math.random()*5000)) 
         
-    }, []);
+    }, [roomId]);
 
     useEffect(() => {
         if(roomId){

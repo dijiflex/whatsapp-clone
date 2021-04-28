@@ -1,15 +1,18 @@
 import './App.css';
-import {BrowserRouter as Router,
-    Switch,
-    Route,
-    Link} from 'react-router-dom'
+import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Chat from './Chat';
+import LogIn from './Login'
+import { useStateValue } from './StateProvider';
 function App() {
+
+    const [{user}, dispatch] = useStateValue()
   return (
       //BEM naming convention
     <div className="app">
+        {!user? (<LogIn />) : (
       <div className='app__body'>
+          
           <Router>
           <Sidebar />
                <Switch>
@@ -20,10 +23,9 @@ function App() {
                         <Chat />
                     </Route>
                </Switch>
-
-          </Router>
-          
+          </Router>          
       </div>
+       )}
     </div>
   );
 }

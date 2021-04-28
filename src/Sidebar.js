@@ -8,8 +8,11 @@ import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import ChatIcon from '@material-ui/icons/Chat';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import  {SearchOutlined, Unsubscribe } from '@material-ui/icons'
+import { useStateValue } from './StateProvider';
+
 function Sidebar() {
     const [rooms, setRooms] = useState([]);
+    const [{ user }, dispatch] = useStateValue()
     useEffect(() => {
         db.collection('rooms').onSnapshot(snapshot => (setRooms(snapshot.docs.map(doc => ({
             id: doc.id,
@@ -20,12 +23,12 @@ function Sidebar() {
         return () =>{
             Unsubscribe();
         }
-    }, [])
+    }, []);
     return (
         <div className='sidebar'>
             <div className='sidebar__header'>
                 <IconButton>
-                <Avatar/>
+                <Avatar src={user?.photoURL}/>
                 </IconButton>
                 
                 <div className='sidebar__headerRight'>
