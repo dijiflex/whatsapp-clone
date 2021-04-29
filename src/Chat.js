@@ -10,6 +10,7 @@ function Chat() {
     const [input, setInput] = useState('')
     const [seed, setSeed] = useState('');
     const [roomName, setRoomName] = useState('Loading...')
+    const [messages, setMessages] = useState([])
     const  { roomId } = useParams();
     useEffect(() => {
        setSeed(Math.floor(Math.random()*5000)) 
@@ -22,9 +23,13 @@ function Chat() {
                 setRoomName(snapshot.data().name)
             ))
         }
+
+        db.collection('rooms').doc(roomId).collection('messages').orderBy('timestamp', 'asc').onSnapshot(snapshot =>(setMessages(snapshot.docs.map(doc => doc.data()))))
         return () => {
-            // cleanup
+            console.log('i was called');
+            console.log(messages)
         }
+        
     }, [roomId])
 
     const sendMessage = (e) => { 
@@ -55,11 +60,16 @@ function Chat() {
             </div>
 
             <div className='chat__body'>
-                <p className={`chat_message ${false && 'chat_receiver'}`}>
-                <span className='chat__name'>Felix Omuok</span>
-                     Hello boys how you dong?
-                <span className='chat__timestamp'>02:50 pm</span>   
-                </p>
+                {messages.map(message => (
+                    <p className={`chat_message ${false && 'chat_receiver'}`}>
+                        <span className='chat__name'>{message.name}</span>
+                            {message.message}
+                        <span className='chat__timestamp'>
+                            {new Date(message.timestamp?.toDate()).toUTCString()}
+                        </span>   
+                    </p>
+                ))}
+                
                 
             </div>
 
@@ -73,7 +83,7 @@ function Chat() {
 
                 <MicIcon />
             </div>
-        </div>
+        </div> 
     )
 }
 
