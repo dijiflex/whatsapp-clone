@@ -20,7 +20,7 @@ const [message, setMessage] = useState('')
         return () => {
             // cleanup
         }
-    }, [])
+    }, [id])
 
     const createChat = () => {
         const roomName = prompt('Please enter name for chat');
