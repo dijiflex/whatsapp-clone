@@ -6,11 +6,15 @@ import db from './firebase'
 import './Chat.css';
 import { AttachFile, SearchOutlined, MoreVert, InsertEmoticon} from '@material-ui/icons';
 import MicIcon from '@material-ui/icons/Mic';
+import firebase from 'firebase';
+import  { useStateValue } from './StateProvider';
+
 function Chat() {
     const [input, setInput] = useState('')
     const [seed, setSeed] = useState('');
     const [roomName, setRoomName] = useState('Loading...')
-    const [messages, setMessages] = useState([])
+    const [messages, setMessages] = useState([]);
+    const [{user}, dispatch] = useStateValue()
     const  { roomId } = useParams();
     useEffect(() => {
        setSeed(Math.floor(Math.random()*5000)) 
@@ -23,17 +27,22 @@ function Chat() {
                 setRoomName(snapshot.data().name)
             ))
         }
-
+        //Load Chat Messages
         db.collection('rooms').doc(roomId).collection('messages').orderBy('timestamp', 'asc').onSnapshot(snapshot =>(setMessages(snapshot.docs.map(doc => doc.data()))))
         return () => {
-            console.log('i was called');
-            console.log(messages)
+            
         }
         
     }, [roomId])
 
     const sendMessage = (e) => { 
         e.preventDefault()
+
+        db.collection('rooms').doc(roomId).collection('messages').add({
+            message: input,
+            name: user.displayName,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        })
         setInput('')
     }
     
@@ -61,7 +70,7 @@ function Chat() {
 
             <div className='chat__body'>
                 {messages.map(message => (
-                    <p className={`chat_message ${false && 'chat_receiver'}`}>
+                    <p className={`chat_message ${message.name === user.displayName && 'chat_receiver'}`}>
                         <span className='chat__name'>{message.name}</span>
                             {message.message}
                         <span className='chat__timestamp'>
